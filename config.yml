@@ -1,0 +1,7 @@
+# Facebook API Configuration
+facebook:
+  page_id: ""
+  access_token: ""
+
+# Bot behavior settings
+simple_mode: true
