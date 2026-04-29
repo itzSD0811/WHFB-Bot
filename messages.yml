@@ -1,8 +1,5 @@
 # Customizable messages for the bot
 
-# Command prefix symbol
-prefix: "?"
-
 # Message sent to the bot's own number when it starts up successfully
 bot_started: "Bot successfully started! 🚀"
 bot_stopped: "Bot is stopping... Goodbye! 👋"
@@ -14,11 +11,12 @@ footer_line3: ""
 
 # --- Facebook Posting Flow Messages ---
 ask_media: "Please send the photo(s) you want to post. When you have sent all of them, reply with `{PREFIX}done`."
+ask_media_simple: "Please send the photo(s) you want to post. When ready, simply send your text description to post instantly! ⚡"
 media_received: "📸 {COUNT} image(s) received. Reply `{PREFIX}done` to continue or send more photos."
+media_received_simple: "📸 {COUNT} image(s) received. Send more photos, or send your text description to post instantly! ⚡"
 confirm_media: "You have {COUNT} image(s) ready to post.\nConfirm with `{PREFIX}yes` or cancel with `{PREFIX}no`."
 ask_description: "Great! Now please send the text description for your post."
-ask_cta: "Select a Call-To-Action button for your post:\n1. Get Message (Messenger)\n2. Get WhatsApp Message\n3. Get Calls\n4. None\n\nReply with the number.\n\n_Note: For WhatsApp/Calls to work, your Page must have a linked and verified number in Facebook Settings._"
-ask_final_confirmation: "Almost ready! {COUNT} photo(s) attached.\nButton: {CTA}\n\n*Preview:*\n{TEXT}\n\nReply with `{PREFIX}yes` to post or `{PREFIX}no` to cancel."
+ask_final_confirmation: "Almost ready! {COUNT} photo(s) attached.\n\n*Preview:*\n{TEXT}\n\nReply with `{PREFIX}yes` to post or `{PREFIX}no` to cancel."
 post_success: "Successfully posted to Facebook! 🎉"
 post_failed: "Failed to post to Facebook. Error: {ERROR}"
 post_cancelled: "Post cancelled."

@@ -1,0 +1,15 @@
+# Customizable commands for the bot
+
+# Command prefix symbol
+prefix: "?"
+
+# Main Commands
+start: "start"
+request: "request"
+exit: "exit"
+test: "test"
+
+# Interactive Flow Commands
+done: "done"
+yes: "yes"
+no: "no"
