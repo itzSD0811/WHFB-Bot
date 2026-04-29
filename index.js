@@ -401,6 +401,33 @@ const startBot = async () => {
 
         const session = userSessions.get(jid);
 
+        // --- POST PREVIEW HELPER ---
+        const sendFinalPreview = async () => {
+            session.state = 'WAITING_FINAL_CONFIRM';
+            
+            const footerLine1 = msgs.footer_line1 || "";
+            const footerLine2 = msgs.footer_line2 || "";
+            const footerLine3 = msgs.footer_line3 || "";
+            const fullFooter = `\n\n${footerLine1}\n${footerLine2}\n${footerLine3}`.trimEnd();
+            
+            const finalDescription = session.textToPost + (fullFooter ? `\n\n${fullFooter}` : "");
+
+            let confirmMsg = msgs.ask_final_confirmation || `Almost ready! {COUNT} photo(s) attached.\n\n*Final Preview:*\n{TEXT}\n\nReply with ${cmdYes} to post`;
+            confirmMsg = confirmMsg.replace('{COUNT}', session.images.length)
+                .replace('{TEXT}', finalDescription)
+                .replace(/{PREFIX}/g, prefix);
+
+            await sock.sendMessage(jid, {
+                text: confirmMsg,
+                buttons: [
+                    { buttonId: cmdYes, buttonText: { displayText: '🚀 Post Now' }, type: 1 },
+                    { buttonId: cmdNo, buttonText: { displayText: '👎 Cancel' }, type: 1 },
+                    { buttonId: cmdExit, buttonText: { displayText: '❌ Exit' }, type: 1 }
+                ],
+                headerType: 1
+            });
+        };
+
         // --- FACEBOOK PUBLISHING HELPER ---
         const publishToFacebook = async () => {
             const fbConfig = config.facebook || {};
@@ -580,9 +607,9 @@ Show this professional help menu.
                     });
                 } else if (!isImage) {
                     if (config.simple_mode && session.images.length > 0) {
-                        // SIMPLE MODE: Text message acts as description and trigger
+                        // SIMPLE MODE: Text message acts as description and triggers preview
                         session.textToPost = text;
-                        await publishToFacebook();
+                        await sendFinalPreview();
                     } else {
                         let textMsg = config.simple_mode ? `Please send photos first.` : `Please send photos, or reply \`${cmdDone}\` if you are finished.`;
                         const btnOptions = config.simple_mode ? [
@@ -621,27 +648,7 @@ Show this professional help menu.
                     return;
                 }
                 session.textToPost = text;
-
-                if (config.simple_mode) {
-                    await publishToFacebook();
-                } else {
-                    session.state = 'WAITING_FINAL_CONFIRM';
-
-                    let confirmMsg = msgs.ask_final_confirmation || `Almost ready! {COUNT} photo(s) attached.\n\n*Preview:*\n{TEXT}\n\nReply with ${cmdYes} to post`;
-                    confirmMsg = confirmMsg.replace('{COUNT}', session.images.length)
-                        .replace('{TEXT}', session.textToPost)
-                        .replace(/{PREFIX}/g, prefix);
-
-                    await sock.sendMessage(jid, {
-                        text: confirmMsg,
-                        buttons: [
-                            { buttonId: cmdYes, buttonText: { displayText: '🚀 Post Now' }, type: 1 },
-                            { buttonId: cmdNo, buttonText: { displayText: '👎 Cancel' }, type: 1 },
-                            { buttonId: cmdExit, buttonText: { displayText: '❌ Exit' }, type: 1 }
-                        ],
-                        headerType: 1
-                    });
-                }
+                await sendFinalPreview();
                 return;
             }
 
